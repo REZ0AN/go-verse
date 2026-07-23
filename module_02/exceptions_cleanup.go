@@ -1,7 +1,6 @@
-package main
+package module_02
 
 import (
-
 	"fmt"
 )
 
@@ -21,13 +20,13 @@ func deferArgTakingExample() {
 
 // Recover from panic
 func safeDivide(a, b int) (result int, err error) {
-    defer func() {
-        if r := recover(); r != nil {
-            err = fmt.Errorf("recovered: %v", r)
-        }
-    }()
-    result = a / b // panics if b == 0 (division by zero)
-    return
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("recovered: %v", r)
+		}
+	}()
+	result = a / b // panics if b == 0 (division by zero)
+	return
 }
 
 // Panic example
@@ -35,7 +34,7 @@ func panicDivide(a, b int) int {
 	if b == 0 {
 		panic("division by zero")
 	}
-	return a/b
+	return a / b
 }
 
 func cleanupExample(x int) {
@@ -44,27 +43,25 @@ func cleanupExample(x int) {
 
 func perIterationCleanupExample(vals []int) {
 	for _, v := range vals {
-	
+
 		fmt.Println("Processing", v)
 		cleanupExample(v)
 	}
 }
 func process(vals []int) {
-    defer fmt.Println("process finished")
+	defer fmt.Println("process finished")
 
-    for _, v := range vals {
-        defer fmt.Println("cleanup for", v)
-        fmt.Println("processing", v)
-    }
+	for _, v := range vals {
+		defer fmt.Println("cleanup for", v)
+		fmt.Println("processing", v)
+	}
 }
 
-
-
-func main() {
+func ExceptionsCleanup_Examples() {
 	fmt.Println("Demonstrating defer order: ")
-	deferOrderExample();
+	deferOrderExample()
 	fmt.Println("\nDemonstrating defer with argument taking: ")
-	deferArgTakingExample();
+	deferArgTakingExample()
 	fmt.Println("\nDemonstrating panic: ")
 	// Uncomment the following line to see panic in action
 	// fmt.Println("Result of panicDivide(10, 0):", panicDivide(10, 0)) (program stops right here)
@@ -74,7 +71,7 @@ func main() {
 	} else {
 		fmt.Println("Result:", result)
 	}
-    // Demonstrating cleanup with defer in a loop: ")
+	// Demonstrating cleanup with defer in a loop: ")
 	fmt.Println("\nDemonstrating cleanup with defer in a loop: ")
 	process([]int{1, 2, 3})
 

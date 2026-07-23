@@ -1,8 +1,8 @@
-package main
+package module_03
 
-import ( "fmt"
+import (
+	"fmt"
 )
-
 
 func makeRateLimiter(limit int) func() bool {
 	count := 0
@@ -15,10 +15,10 @@ func makeRateLimiter(limit int) func() bool {
 	}
 }
 
-func main() {
+func RateLimiterClosure_Examples() {
 	limiter := makeRateLimiter(3)
 	for i := 0; i < 5; i++ {
-		fmt.Printf("%v ",limiter())
+		fmt.Printf("%v ", limiter())
 	}
 	fmt.Println()
 }

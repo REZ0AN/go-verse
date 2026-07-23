@@ -1,4 +1,4 @@
-package main
+package module_03
 
 import (
 	"fmt"
@@ -6,24 +6,24 @@ import (
 
 // mutliple return values
 func divmod(a, b int) (int, int) {
-	d := a/b
-	r := a%b
+	d := a / b
+	r := a % b
 	return d, r
 
 }
 
 // named return values
 func divmodNamed(a, b int) (d int, r int) {
-	d = a/b
-	r = a%b
+	d = a / b
+	r = a % b
 	return
 }
 
-// variadic function 
+// variadic function
 func sumXx(x int, a ...int) int {
 	total := 0
 	for _, v := range a {
-		total += v*x
+		total += v * x
 	}
 	return total
 }
@@ -42,7 +42,7 @@ func applyOperation(a, b int, op func(int, int) int) int {
 	return op(a, b)
 }
 
-func main() {
+func Function_Examples() {
 	fmt.Println("Demonstrating multiple return values:")
 	d, r := divmod(10, 3)
 	fmt.Printf("Div: %d, Mod: %d\n", d, r)

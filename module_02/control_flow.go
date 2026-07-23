@@ -1,19 +1,19 @@
-package main
+package module_02
 
 import "fmt"
 
 func classify(n int) string {
 	// Implement the FizzBuzz logic using a switch statement if/else replacement
-    switch {
-    case n%15 == 0:
-        return "FizzBuzz"
-    case n%3 == 0:
-        return "Fizz"
-    case n%5 == 0:
-        return "Buzz"
-    default:
-        return fmt.Sprintf("%d", n)
-    }
+	switch {
+	case n%15 == 0:
+		return "FizzBuzz"
+	case n%3 == 0:
+		return "Fizz"
+	case n%5 == 0:
+		return "Buzz"
+	default:
+		return fmt.Sprintf("%d", n)
+	}
 }
 
 func classifyIE(n int) string {
@@ -68,11 +68,11 @@ func getRemainder(nominator, denominator int) (int, error) {
 	return nominator % denominator, nil
 }
 
-func main() {
+func ControlFlow_Examples() {
 	// Test the classify function with numbers from 1 to 5
-    for i := 1; i <= 5; i++ {
-        fmt.Println(classify(i))
-    }
+	for i := 1; i <= 5; i++ {
+		fmt.Println(classify(i))
+	}
 
 	// Test the classifyIE function with numbers from 1 to 5
 	for i := 1; i <= 5; i++ {
