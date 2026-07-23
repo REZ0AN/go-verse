@@ -1,12 +1,12 @@
-package main
+package module_01
 
 import (
 	"fmt"
 )
 
-func main() {
+func DataType_Examples() {
 
-	// Numeric Data Types 
+	// Numeric Data Types
 
 	// int, uint (range depends on the platform architecture)
 	// uint8, uint16, uint32, uint64 (range depends on the platform architecture)
@@ -16,7 +16,7 @@ func main() {
 	// Declare a variable of type int
 	var age int = 25
 	fmt.Println("Age:", age)
-	
+
 	// Declare a variable of type float64
 	var height float64 = 5.9
 	fmt.Println("Height:", height)
@@ -24,7 +24,7 @@ func main() {
 	// Declare a variable of type string
 	var name string = "John Doe"
 	fmt.Println("Name:", name)
-	
+
 	// Declare a variable of type bool
 	var isStudent bool = true
 	fmt.Println("Is Student:", isStudent)
@@ -32,12 +32,12 @@ func main() {
 	// Declare a variable of type rune
 	var initial rune = 'J'
 	fmt.Println("Initial:", initial)
-	
+
 	// Declare a variable of type byte
 	var grade byte = 90
 	fmt.Println("Grade:", grade)
 
-    // type conversion
+	// type conversion
 	var x int = 10
 	var y float64 = float64(x) // convert int to float64
 	fmt.Println("Converted value:", y)

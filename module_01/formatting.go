@@ -1,17 +1,17 @@
-package main
+package module_01
 
 import (
 	"fmt"
 )
 
-func main() {
+func Formatting_Examples() {
 	name := "Go"
 	version := 1.23
 
-	fmt.Println("Hello", name)                  // space-separated, newline
-	fmt.Printf("Go version: %.2f\n", version)   // formatted, like C's printf
-	s := fmt.Sprintf("v%.2f", version)          // formatted INTO a string, no print
-	fmt.Println("Formatted string:", s)         // print the formatted string
+	fmt.Println("Hello", name)                // space-separated, newline
+	fmt.Printf("Go version: %.2f\n", version) // formatted, like C's printf
+	s := fmt.Sprintf("v%.2f", version)        // formatted INTO a string, no print
+	fmt.Println("Formatted string:", s)       // print the formatted string
 	// common verbs
 	// %d   integer
 	// %f   float

@@ -1,17 +1,18 @@
-package main
+package module_01
+
 import (
-    "bufio"
-    "fmt"
-    "os"
+	"bufio"
+	"fmt"
+	"os"
 )
 
-func main() {
-    var name string
-    fmt.Print("Enter name: ")
-    fmt.Scanln(&name) // reads a single whitespace-delimited token
+func Io_Examples() {
+	var name string
+	fmt.Print("Enter name: ")
+	fmt.Scanln(&name) // reads a single whitespace-delimited token
 
-    reader := bufio.NewReader(os.Stdin)
-    fmt.Print("Enter full line: ")
-    line, _ := reader.ReadString('\n') // reads until the delimiter byte
-    fmt.Println("You entered:", line)
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Enter full line: ")
+	line, _ := reader.ReadString('\n') // reads until the delimiter byte
+	fmt.Println("You entered:", line)
 }
