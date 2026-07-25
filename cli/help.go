@@ -1,40 +1,39 @@
 package cli
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
-func PrintGlobalHelp() {
-	fmt.Println("Go Verse - A Go Learning Playground")
-	fmt.Println()
+func PrintGlobalHelp(w io.Writer) {
+	fmt.Fprintln(w, "Go Verse - A Go Learning Playground")
+	fmt.Fprintln(w)
 
-	fmt.Println("Usage:")
-	fmt.Println("  go run . <module> <example>")
-	fmt.Println("  go run . <module> --help")
-	fmt.Println()
+	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintln(w, "  go run . <module> <example>")
+	fmt.Fprintln(w, "  go run . <module> --help")
+	fmt.Fprintln(w)
 
-	fmt.Println("Available Modules:")
-	fmt.Println()
+	fmt.Fprintln(w, "Available Modules:")
+	fmt.Fprintln(w)
 
-	for _, module := range Modules {
-		fmt.Printf("  %-15s %s\n", module.Name, module.Description)
+	for _, module := range AllModules() {
+		fmt.Fprintf(w, "  %-15s %s\n", module.Name, module.Description)
 	}
 }
 
-func PrintModuleHelp(module Module) {
-	fmt.Printf("Helper for module -> %s\n", module.Name)
-	fmt.Println()
+func PrintModuleHelp(w io.Writer, module Module) {
+	fmt.Fprintf(w, "Module: %s\n", module.Name)
+	fmt.Fprintf(w, "Description: %s\n\n", module.Description)
 
-	fmt.Println(module.Description)
-	fmt.Println()
+	fmt.Fprintln(w, "Usage:")
+	fmt.Fprintf(w, "  go run . %s <example>\n", module.Name)
+	fmt.Fprintf(w, "  go run . %s --help\n\n", module.Name)
 
-	fmt.Println("Usage:")
-	fmt.Printf("  go run . %s <example>\n", module.Name)
-	fmt.Printf("  go run . %s --help\n", module.Name)
-	fmt.Println()
+	fmt.Fprintln(w, "Available Examples:")
+	fmt.Fprintln(w)
 
-	fmt.Println("Available Examples:")
-	fmt.Println()
-
-	for _, example := range module.Examples {
-		fmt.Printf("  %-15s %s\n", example.Name, example.Description)
+	for _, example := range AllExamples(module) {
+		fmt.Fprintf(w, "  %-20s %s\n", example.Name, example.Description)
 	}
 }
