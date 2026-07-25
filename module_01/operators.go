@@ -2,59 +2,81 @@ package module_01
 
 import (
 	"fmt"
+	"io"
 )
 
-func Operator_Examples() {
-	// Arithmetic Operators
-	var a int = 10
-	var b int = 3
+// Operators demonstrates Go's operators.
+func Operators(_ io.Reader, w io.Writer) error {
 
-	fmt.Println("Addition:", a+b)
-	fmt.Println("Subtraction:", a-b)
-	fmt.Println("Multiplication:", a*b)
-	fmt.Println("Division:", a/b)
-	fmt.Println("Modulus:", a%b)
+	a := 10
+	b := 3
 
-	// Relational Operators
-	fmt.Println("Equal to:", a == b)
-	fmt.Println("Not equal to:", a != b)
-	fmt.Println("Greater than:", a > b)
-	fmt.Println("Less than:", a < b)
-	fmt.Println("Greater than or equal to:", a >= b)
-	fmt.Println("Less than or equal to:", a <= b)
+	fmt.Fprintln(w, "Arithmetic Operators")
+	fmt.Fprintln(w, "--------------------")
 
-	// Logical Operators
-	var x bool = true
-	var y bool = false
+	fmt.Fprintf(w, "%d + %d = %d\n", a, b, a+b)
+	fmt.Fprintf(w, "%d - %d = %d\n", a, b, a-b)
+	fmt.Fprintf(w, "%d * %d = %d\n", a, b, a*b)
+	fmt.Fprintf(w, "%d / %d = %d\n", a, b, a/b)
+	fmt.Fprintf(w, "%d %% %d = %d\n", a, b, a%b)
 
-	fmt.Println("Logical AND:", x && y)
-	fmt.Println("Logical OR:", x || y)
-	fmt.Println("Logical NOT:", !x)
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Comparison Operators")
+	fmt.Fprintln(w, "--------------------")
 
-	// Assignment Operators
-	a += 5 // a = a + 5
-	fmt.Println("After += 5:", a)
+	fmt.Fprintf(w, "%d == %d : %t\n", a, b, a == b)
+	fmt.Fprintf(w, "%d != %d : %t\n", a, b, a != b)
+	fmt.Fprintf(w, "%d > %d  : %t\n", a, b, a > b)
+	fmt.Fprintf(w, "%d < %d  : %t\n", a, b, a < b)
+	fmt.Fprintf(w, "%d >= %d : %t\n", a, b, a >= b)
+	fmt.Fprintf(w, "%d <= %d : %t\n", a, b, a <= b)
 
-	a -= 2 // a = a - 2
-	fmt.Println("After -= 2:", a)
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Logical Operators")
+	fmt.Fprintln(w, "-----------------")
 
-	a *= 3 // a = a * 3
-	fmt.Println("After *= 3:", a)
+	x := true
+	y := false
 
-	a /= 4 // a = a / 4
-	fmt.Println("After /= 4:", a)
+	fmt.Fprintf(w, "x && y = %t\n", x && y)
+	fmt.Fprintf(w, "x || y = %t\n", x || y)
+	fmt.Fprintf(w, "!x     = %t\n", !x)
 
-	a %= 2 // a = a % 2
-	fmt.Println("After %= 2:", a)
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Assignment Operators")
+	fmt.Fprintln(w, "--------------------")
 
-	// Bitwise Operators
-	var c int = 5 // binary: 0101
-	var d int = 3 // binary: 0011
+	value := 10
+	fmt.Fprintf(w, "Initial : %d\n", value)
 
-	fmt.Println("Bitwise AND:", c&d)      // binary: 0001 -> decimal: 1
-	fmt.Println("Bitwise OR:", c|d)       // binary: 0111 -> decimal: 7
-	fmt.Println("Bitwise XOR:", c^d)      // binary: 0110 -> decimal: 6
-	fmt.Println("Bitwise AND NOT:", c&^d) // binary: 0100 -> decimal: 4 (helps with bit masking)
-	fmt.Println("Left Shift:", c<<1)      // binary: 1010 -> decimal: 10
-	fmt.Println("Right Shift:", c>>1)     // binary: 0010 -> decimal: 2
+	value += 5
+	fmt.Fprintf(w, "+= 5    : %d\n", value)
+
+	value -= 2
+	fmt.Fprintf(w, "-= 2    : %d\n", value)
+
+	value *= 3
+	fmt.Fprintf(w, "*= 3    : %d\n", value)
+
+	value /= 4
+	fmt.Fprintf(w, "/= 4    : %d\n", value)
+
+	value %= 2
+	fmt.Fprintf(w, "%%= 2    : %d\n", value)
+
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "Bitwise Operators")
+	fmt.Fprintln(w, "-----------------")
+
+	c := 5 // 0101
+	d := 3 // 0011
+
+	fmt.Fprintf(w, "%04b &  %04b = %04b (%d)\n", c, d, c&d, c&d)
+	fmt.Fprintf(w, "%04b |  %04b = %04b (%d)\n", c, d, c|d, c|d)
+	fmt.Fprintf(w, "%04b ^  %04b = %04b (%d)\n", c, d, c^d, c^d)
+	fmt.Fprintf(w, "%04b &^ %04b = %04b (%d)\n", c, d, c&^d, c&^d)
+	fmt.Fprintf(w, "%04b << 1 = %04b (%d)\n", c, c<<1, c<<1)
+	fmt.Fprintf(w, "%04b >> 1 = %04b (%d)\n", c, c>>1, c>>1)
+
+	return nil
 }

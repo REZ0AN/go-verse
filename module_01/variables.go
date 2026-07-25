@@ -2,62 +2,35 @@ package module_01
 
 import (
 	"fmt"
+	"io"
 )
 
-func Variable_Examples() {
-	// declaring  variables - Three ways
-	var name string = "Go" // explicit type, explicit initialization
-	var age = 10           // implicit type, explicit initialization
-	isAdult := false       // implicit type, implicit initialization
+// Variables demonstrates different ways to declare variables.
+func Variables(_ io.Reader, w io.Writer) error {
 
-	fmt.Println("Name:", name)
-	fmt.Println("Age:", age)
-	fmt.Println("Is Adult:", isAdult)
+	// Explicit type
+	var language string = "Go"
 
-	// multiple variable declaration at one time
+	// Type inference
+	var version = 1.25
+
+	// Short variable declaration
+	isOpenSource := true
+
+	fmt.Fprintf(w, "Language: %s\n", language)
+	fmt.Fprintf(w, "Version : %f\n", version)
+	fmt.Fprintf(w, "Open     : %t\n", isOpenSource)
+
+	fmt.Fprintln(w)
+
+	// Multiple declarations
 	var (
-		nameAgain string = "Go"
-		year      int    = 2009
-		stable    bool   = true
+		author   = "Google"
+		released = 2009
 	)
 
-	fmt.Println("Name:", nameAgain)
-	fmt.Println("Year:", year)
-	fmt.Println("Stable:", stable)
+	fmt.Fprintf(w, "Author   : %s\n", author)
+	fmt.Fprintf(w, "Released : %d\n", released)
 
-	// constants
-	const pi = 3.14
-	const (
-		StatusOK       = 200
-		StatusNotFound = 404
-	)
-
-	var areaCircle float32 = pi * 10 * 10
-	fmt.Println("Area of Circle:", areaCircle)
-	fmt.Printf("Type of Pi: %T\n", pi)
-	fmt.Printf("Type of Area of Circle: %T\n", areaCircle)
-	fmt.Printf("Status OK: %d, Status Not Found: %d\n", StatusOK, StatusNotFound)
-
-	// enums in GO using iota
-	type Weekday int
-	const (
-		Sunday Weekday = iota
-		Monday
-		Tuesday
-		Wednesday
-		Thursday
-		Friday
-		Saturday
-	)
-	fmt.Println("Days of the week:")
-	fmt.Println("Sunday:", Sunday)
-	fmt.Println("Monday:", Monday)
-	fmt.Println("Tuesday:", Tuesday)
-	fmt.Println("Wednesday:", Wednesday)
-	fmt.Println("Thursday:", Thursday)
-	fmt.Println("Friday:", Friday)
-	fmt.Println("Saturday:", Saturday)
-
-	// type of Sunday
-	fmt.Printf("Type of Sunday: %T\n", Sunday)
+	return nil
 }
