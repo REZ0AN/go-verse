@@ -1,57 +1,315 @@
-## Why Go supports multiple return values natively
-In **C/Java**, a function returns exactly one value, if you need to return more, you either use out-parameters (`pointers`), wrap things in a `struct/object`, or throw exceptions for the error case. **Go**'s designers considered this awkward for the single most common pattern in their systems code: "**here's your result, and here's whether something went wrong.**"
-So Go made multiple return values a first-class part of the type system, not a tuple, not a wrapped object, just literally multiple values returned directly:
+# Module 03 — Functions
+
+Functions are one of Go's fundamental building blocks. They let you organize code into reusable units, pass data through parameters, return results, and even treat functions themselves as values.
+
+---
+
+## Functions
+
+A function is a reusable block of code that performs a specific task.
+
 ```go
-func divide(a, b int) (int, error) { ... }
+func greet(name string) {
+    fmt.Println("Hello,", name)
+}
 ```
-This is the mechanism that makes Go's `if err != nil` pattern possible everywhere, instead of exceptions. It's not a workaround — it's the deliberate alternative to exceptions that Go chose from day one.
 
-## Named returns — what they really are
-You've seen these already. The formal explanation: naming a return value is equivalent to declaring a variable at the top of the function, pre-initialized to its **zero value**, which a bare return statement automatically returns. This is genuinely just syntactic sugar over declaring a variable, nothing magic, but it becomes powerful specifically in combination with `defer` (as you saw with `recover()` rewriting result).
-
-## Variadic functions — how ...T actually works internally
+Call a function by using its name.
 
 ```go
-func sum(nums ...int) int { ... }
+greet("Go")
+```
+
+Functions can also return values.
+
+```go
+func add(a, b int) int {
+    return a + b
+}
+```
+
+---
+
+## Parameters
+
+Parameters allow functions to receive input.
+
+```go
+func rectangleArea(width, height int) int {
+    return width * height
+}
+```
+
+Arguments are supplied when calling the function.
+
+```go
+area := rectangleArea(10, 5)
+```
+
+Parameters of the same type can share the type declaration.
+
+```go
+func add(a, b int) int
+```
+
+instead of
+
+```go
+func add(a int, b int) int
+```
+
+---
+
+## Multiple Return Values
+
+Unlike many languages, Go functions can return multiple values.
+
+```go
+func divMod(a, b int) (int, int) {
+    return a / b, a % b
+}
+```
+
+Usage:
+
+```go
+quotient, remainder := divMod(17, 5)
+```
+
+You can ignore unwanted return values using the blank identifier.
+
+```go
+quotient, _ := divMod(20, 3)
+```
+
+This feature is heavily used throughout Go, especially for returning a value and an error.
+
+```go
+value, err := readFile(...)
+```
+
+---
+
+## Named Return Values
+
+Return values can be given names.
+
+```go
+func divide(a, b int) (quotient int, remainder int) {
+    quotient = a / b
+    remainder = a % b
+    return
+}
+```
+
+Named return values are simply local variables initialized to their zero values.
+
+A bare `return` returns the current values of those variables.
+
+Although supported, explicit return values are usually preferred unless named returns improve readability.
+
+---
+
+## Variadic Functions
+
+Variadic functions accept zero or more arguments.
+
+```go
+func sum(numbers ...int) int {
+}
+```
+
+Call it with any number of values.
+
+```go
 sum(1, 2, 3)
+sum(10, 20)
+sum()
 ```
-Internally, `nums ...int` is just a regular slice (`[]int`) inside the function body, the `...` syntax is purely about how the function is called, not a new data type. When you call `sum(1, 2, 3)`, Go allocates a `[]int{1, 2, 3}` slice and passes it in, exactly as if you'd written `sum([]int{1,2,3}...)`. That's actually valid syntax too, spreading an existing slice into a variadic call using `slice...`.
-**Constraint**: a variadic parameter must be the last parameter in the function signature, the compiler needs to know unambiguously where the fixed parameters end and the variadic ones begin.
 
-## Closures — the important concept
-A **closure** is a function value that captures variables from the scope it was defined in, and keeps access to those variables even after that outer scope would normally have ended.
+Inside the function, the variadic parameter is just a slice.
+
+```go
+func sum(numbers ...int) {
+    // numbers has type []int
+}
+```
+
+You can also pass an existing slice.
+
+```go
+nums := []int{1, 2, 3}
+
+sum(nums...)
+```
+
+A variadic parameter must always be the last parameter.
+
+---
+
+## Anonymous Functions
+
+An anonymous function has no name.
+
+```go
+func(a, b int) int {
+    return a + b
+}
+```
+
+It can be called immediately.
+
+```go
+result := func(a, b int) int {
+    return a + b
+}(10, 20)
+```
+
+Or assigned to a variable.
+
+```go
+multiply := func(a, b int) int {
+    return a * b
+}
+```
+
+Functions are values in Go and can be stored in variables.
+
+---
+
+## Closures
+
+A closure is a function that captures variables from its surrounding scope.
+
 ```go
 func makeCounter() func() int {
     count := 0
+
     return func() int {
         count++
         return count
     }
 }
 ```
-Here's the critical internal detail: count would normally live on `makeCounter`'s stack frame and disappear when `makeCounter` returns. But because the inner `anonymous` function references `count`, Go's compiler performs **escape** analysis, and determines `count` must be allocated on the **heap** instead of the **stack**, specifically because its lifetime needs to outlive the function that created it. 
-This is closure's entire mechanism: the variable is captured by `reference`, not by `value`, meaning multiple closure's created from the same scope share and can **mutate** the same underlying variable, not independent copies.
+
+Each call to `makeCounter()` creates a new independent `count` variable.
 
 ```go
 c1 := makeCounter()
 c2 := makeCounter()
+
 fmt.Println(c1()) // 1
-fmt.Println(c1()) // 2 — c1's own count, independent of c2
-fmt.Println(c2()) // 1 — c2 has its OWN count, because each call to
-//  makeCounter() creates a fresh count variable
+fmt.Println(c1()) // 2
+fmt.Println(c2()) // 1
 ```
-Each call to `makeCounter()` creates a brand-new count variable on the heap, `c1` and `c2` are closures over two different **heap-allocated** counts, which is why they don't interfere with each other despite being created by the same function.
 
-## Higher-order functions — functions as values
+The captured variables continue to exist even after the outer function returns.
 
-Since functions in **Go** are values with types `(like func(int) int)`, you can pass them as **arguments**, return them, and store them in `variables/structs/maps`, exactly like any other **value**.
+---
+
+## Higher-Order Functions
+
+A higher-order function either:
+
+- accepts a function as a parameter, or
+- returns a function.
+
+Example:
+
 ```go
-func apply(nums []int, f func(int) int) []int {
-    result := make([]int, len(nums))
-    for i, n := range nums {
-        result[i] = f(n)
-    }
-    return result
+func apply(a, b int, operation func(int, int) int) int {
+    return operation(a, b)
 }
 ```
-This is the foundation of a lot of idiomatic Go, `sort.Slice` takes a comparison function, `http.HandleFunc` takes a handler function, middleware patterns wrap one `http.Handler` inside another. Understanding "**functions are just values**" now will make those APIs feel obvious instead of magical later.
+
+Usage:
+
+```go
+result := apply(10, 20, add)
+```
+
+Anonymous functions can also be passed directly.
+
+```go
+apply(10, 20, func(a, b int) int {
+    return a * b
+})
+```
+
+Many Go standard library packages use higher-order functions.
+
+---
+
+## Recursion
+
+A recursive function calls itself.
+
+Every recursive function must have a base case.
+
+```go
+func factorial(n int) int {
+    if n <= 1 {
+        return 1
+    }
+
+    return n * factorial(n-1)
+}
+```
+
+Without a base case, recursion continues until the program overflows the stack.
+
+Recursion is useful for naturally recursive problems such as trees, graphs, and divide-and-conquer algorithms.
+
+---
+
+## Closures in Practice
+
+Closures are commonly used to preserve state.
+
+Example:
+
+```go
+func makeRateLimiter(limit int) func() bool {
+    count := 0
+
+    return func() bool {
+        if count < limit {
+            count++
+            return true
+        }
+
+        return false
+    }
+}
+```
+
+Each rate limiter has its own independent state.
+
+```go
+userA := makeRateLimiter(3)
+userB := makeRateLimiter(3)
+```
+
+This pattern is frequently used for:
+
+- Counters
+- Rate limiters
+- Middleware
+- Caching
+- Memoization
+
+---
+
+# Key Takeaways
+
+- Functions organize reusable logic.
+- Parameters allow functions to receive input.
+- Go functions can return multiple values.
+- Named returns are local variables initialized to zero values.
+- Variadic functions accept zero or more arguments.
+- Anonymous functions have no name and are values.
+- Closures capture variables from their surrounding scope.
+- Each closure has its own captured state.
+- Higher-order functions accept or return functions.
+- Recursive functions call themselves and require a base case.
+- Closures enable practical patterns such as counters and rate limiters.
