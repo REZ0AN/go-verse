@@ -41,5 +41,10 @@ var Module = cli.Module{
 			Description: "any is an ALIAS for interface{} — identical type, and boxing still allocates",
 			Run:         Any,
 		},
+		"interface_composition": {
+			Name:        "interface_composition",
+			Description: "New interface by embedding one or more existing ones, supports composition over inheritance, makes code easier to test, mock, satisfy, reusable",
+			Run:         InterfaceComposition,
+		},
 	},
 }
